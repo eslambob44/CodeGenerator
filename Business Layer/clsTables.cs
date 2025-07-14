@@ -48,5 +48,10 @@ namespace Business_Layer
             return data.ListTablesInDataBase();
         }
 
+        public clsTable GetTable(string TableName)
+        {
+            return clsTable.GetObject(ConnectionString, TableName);
+        }
+
     }
 }
