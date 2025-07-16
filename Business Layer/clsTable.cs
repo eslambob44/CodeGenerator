@@ -12,7 +12,7 @@ namespace Business_Layer
 {
     public class clsTable: ITableInfo
     {
-        public string _ConnectionString { get; private set; }
+        public string ConnectionString { get; private set; }
         public string TableName { get; private set; }
 
         clsTableData _data;
@@ -191,7 +191,7 @@ namespace Business_Layer
 
         private clsTable(string ConnectionString, string TableName, clsTableData data)
         {
-            _ConnectionString = ConnectionString;
+            this.ConnectionString = ConnectionString;
             this.TableName = TableName;
             this._data = data;
             _LoadColumns();
@@ -206,12 +206,12 @@ namespace Business_Layer
         }
 
         public string GenerateCode(ICodeGenerator DataAccessLayerCodeGenerator,
-            ICodeGenerator BusinessLayerCodeGenerator)
+            ICodeGenerator BusinessLayerCodeGenerator , string ObjectName)
         {
             string FolderLocation = ConfigurationManager.AppSettings["FolderLocation"];
 
-            if (DataAccessLayerCodeGenerator?.GenerateCode(FolderLocation) == null
-                || BusinessLayerCodeGenerator?.GenerateCode(FolderLocation) == null)
+            if (DataAccessLayerCodeGenerator?.GenerateCode(FolderLocation , ObjectName) == null
+                || BusinessLayerCodeGenerator?.GenerateCode(FolderLocation, ObjectName) == null)
             {
                 return null;
             }
@@ -224,6 +224,8 @@ namespace Business_Layer
 
 public interface ITableInfo
 {
+     string TableName { get; }
+     string ConnectionString { get; }
      Dictionary<string, stDataType> Columns { get; }
      HashSet<string> NullableColumns { get; }
      HashSet<string> PrimaryKeys { get; }
@@ -234,5 +236,14 @@ public interface ITableInfo
 
 public interface ICodeGenerator
 {
-    string GenerateCode(string FolderLocation);
+    
+    string GenerateCode(string FolderLocation, string ObjectName);
+}
+
+public class clsCodeGeneratorMock:ICodeGenerator
+{
+    public string GenerateCode(string FolderLocation, string ObjectName)
+    {
+        return null;
+    }
 }

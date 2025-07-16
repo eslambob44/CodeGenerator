@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clsDataAccessLayerSettings.cs" />
+    <Compile Include="clsExecuteStoredProcedureData.cs" />
     <Compile Include="clsTableData.cs" />
     <Compile Include="clsTablesData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
