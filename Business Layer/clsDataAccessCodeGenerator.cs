@@ -18,7 +18,8 @@ namespace Business_Layer
 
         public string GenerateCode (string FolderLocation , string ObjectName )
         {
-            clsDataAccessLayerInsertCodeGenerator.GenerateCode(Table, ObjectName);
+            string InsertCode = clsDataAccessLayerInsertCodeGenerator.GenerateCode(Table, ObjectName);
+            string UpdateCode = clsDataAccessLayerUpdateCodeGenerator.CodeGenerate(Table,ObjectName);
             return null;
         }
 

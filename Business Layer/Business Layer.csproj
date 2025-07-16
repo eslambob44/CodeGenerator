@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="clsDataAccessCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerInsertCodeGenerator.cs" />
+    <Compile Include="clsDataAccessLayerUpdateCodeGenerator.cs" />
     <Compile Include="clsTable.cs" />
     <Compile Include="clsTables.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
