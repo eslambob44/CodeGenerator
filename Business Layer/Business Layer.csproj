@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="clsDataAccessCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerDeleteCodeGenerator.cs" />
+    <Compile Include="clsDataAccessLayerFindCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerInsertCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerUpdateCodeGenerator.cs" />
     <Compile Include="clsTable.cs" />
