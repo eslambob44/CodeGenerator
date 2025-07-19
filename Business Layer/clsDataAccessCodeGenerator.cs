@@ -22,6 +22,7 @@ namespace Business_Layer
             string UpdateCode = clsDataAccessLayerUpdateCodeGenerator.CodeGenerate(Table,ObjectName);
             string DeleteCode = clsDataAccessLayerDeleteCodeGenerator.GenerateCode(Table,ObjectName);
             string FindCode = clsDataAccessLayerFindCodeGenerator.GenerateCode(Table,ObjectName);
+            string ListCode = clsDataAccessLayerListCodeGenerator.GenerateCode(Table);
             return null;
         }
 

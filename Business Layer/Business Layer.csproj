@@ -46,6 +46,7 @@
     <Compile Include="clsDataAccessLayerDeleteCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerFindCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerInsertCodeGenerator.cs" />
+    <Compile Include="clsDataAccessLayerListCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerUpdateCodeGenerator.cs" />
     <Compile Include="clsTable.cs" />
     <Compile Include="clsTables.cs" />
