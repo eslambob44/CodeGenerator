@@ -24,6 +24,13 @@ namespace Data_Access_Layer
                     return true;
                 }
             }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 2714)
+                    return true;
+                else return false;
+            }
+
             catch (Exception ex)
             {
                 return false;

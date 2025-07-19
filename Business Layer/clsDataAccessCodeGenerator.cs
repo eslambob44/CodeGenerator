@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,23 +11,50 @@ namespace Business_Layer
 {
     public class clsDataAccessCodeGenerator : ICodeGenerator
     {
-        private ITableInfo Table;
-        private string TableName;
-         public clsDataAccessCodeGenerator (ITableInfo Table)
+
+        private IDataAccessLayerCodeGenerator[] CodeGenerators;
+         public clsDataAccessCodeGenerator ( IDataAccessLayerCodeGenerator[] codeGenerators)
         {
-            this.Table = Table;
+            this.CodeGenerators = codeGenerators;
         }
 
-        public string GenerateCode (string FolderLocation , string ObjectName )
+        public string GenerateCode (ITableInfo TableInfo,string FolderLocation , string ObjectName )
         {
-            string InsertCode = clsDataAccessLayerInsertCodeGenerator.GenerateCode(Table, ObjectName);
-            string UpdateCode = clsDataAccessLayerUpdateCodeGenerator.CodeGenerate(Table,ObjectName);
-            string DeleteCode = clsDataAccessLayerDeleteCodeGenerator.GenerateCode(Table,ObjectName);
-            string FindCode = clsDataAccessLayerFindCodeGenerator.GenerateCode(Table,ObjectName);
-            string ListCode = clsDataAccessLayerListCodeGenerator.GenerateCode(Table);
-            return null;
+            if (!Directory.Exists(FolderLocation)) FolderLocation = "D:\\";
+
+            StringBuilder GeneratedCode = new StringBuilder("");
+            foreach (var item in CodeGenerators) 
+            {
+                GeneratedCode.AppendLine(item.GenerateCode(TableInfo, ObjectName)) ;
+            }
+
+            StringBuilder Code= new StringBuilder($@"using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data;
+
+namespace Data_Access_Layer
+{{
+    static public class cls{ObjectName}Data
+    {{
+        static public event Action<Exception> OnErrorOccur;") ;
+            Code.AppendLine(GeneratedCode.ToString());
+            Code.AppendLine ("\t}\n}");
+
+            Utility.clsIO.WriteToFile(FolderLocation, $"cls{ObjectName}Data.cs", Code.ToString());
+            
+            
+            return FolderLocation+"\\"+$"{ObjectName}Data.cs";
         }
 
 
     }
+}
+
+public interface IDataAccessLayerCodeGenerator
+{
+    string GenerateCode(ITableInfo Table, string ObjectName);
 }

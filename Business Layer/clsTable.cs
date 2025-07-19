@@ -205,17 +205,17 @@ namespace Business_Layer
             else return null;
         }
 
-        public string GenerateCode(ICodeGenerator DataAccessLayerCodeGenerator,
-            ICodeGenerator BusinessLayerCodeGenerator , string ObjectName)
+        public string GenerateCode(ICodeGenerator[] CodeGenerators , string ObjectName)
         {
             string FolderLocation = ConfigurationManager.AppSettings["FolderLocation"];
 
-            if (DataAccessLayerCodeGenerator?.GenerateCode(FolderLocation , ObjectName) == null
-                || BusinessLayerCodeGenerator?.GenerateCode(FolderLocation, ObjectName) == null)
+            bool IsExcuted = true;
+            foreach(var codeGenerator in CodeGenerators)
             {
-                return null;
+                IsExcuted &= codeGenerator?.GenerateCode(this,FolderLocation,ObjectName)!= null;    
             }
-            else return FolderLocation;
+            if (IsExcuted) return FolderLocation;
+            else return null;
         }
         
 
@@ -236,13 +236,14 @@ public interface ITableInfo
 
 public interface ICodeGenerator
 {
-    
-    string GenerateCode(string FolderLocation, string ObjectName);
+
+    string GenerateCode(ITableInfo TableInfo ,string FolderLocation, string ObjectName);
 }
 
 public class clsCodeGeneratorMock:ICodeGenerator
 {
-    public string GenerateCode(string FolderLocation, string ObjectName)
+    
+    public string GenerateCode(ITableInfo TableInfo,string FolderLocation, string ObjectName)
     {
         return null;
     }

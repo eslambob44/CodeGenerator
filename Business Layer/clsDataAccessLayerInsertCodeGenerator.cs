@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Business_Layer
 {
-    static internal class clsDataAccessLayerInsertCodeGenerator
+    public class clsDataAccessLayerInsertCodeGenerator: IDataAccessLayerCodeGenerator
     {
         
-        static private string GenerateCParameters(ITableInfo Table)
+         private string GenerateCParameters(ITableInfo Table)
         {
             string Parameter = "";
             
@@ -27,7 +27,7 @@ namespace Business_Layer
             
         }
 
-        static private string GenerateSqlParameter(ITableInfo Table)
+         private string GenerateSqlParameter(ITableInfo Table)
         {
             string Parameter = "";
 
@@ -44,7 +44,7 @@ namespace Business_Layer
         }
 
 
-        static public bool GenerateStoredProcedure(ITableInfo Table , string Parameters , string ObjectName)
+         public bool GenerateStoredProcedure(ITableInfo Table , string Parameters , string ObjectName)
         {
 
 
@@ -70,7 +70,7 @@ END";
         }
 
 
-        static private string GenerateDataAccessInsertIdentity( ITableInfo Table , string CParameters , string ObjectName)
+         private string GenerateDataAccessInsertIdentity( ITableInfo Table , string CParameters , string ObjectName)
         {
             string PrimaryKeyType = string.Join(",", Table.Columns.Where(kvp => kvp.Key == Table.PrimaryKeys.FirstOrDefault()).Select(kvp => kvp.Value.DataType));
             string Code = $@"static public {PrimaryKeyType}? Insert({CParameters})
@@ -120,7 +120,7 @@ END";
         }
 
 
-        static private string GenerateDataAccessInsert(ITableInfo Table, string CParameters, string ObjectName)
+         private string GenerateDataAccessInsert(ITableInfo Table, string CParameters, string ObjectName)
         {
             string Code = $@"static public bool Insert({CParameters})
         {{
@@ -166,18 +166,18 @@ END";
             return Code;
         }
 
-        static public string GenerateCode(ITableInfo Table , string ObjectName)
+         public string GenerateCode(ITableInfo Table , string ObjectName)
         {
             string Parameter = GenerateCParameters(Table);
             string sqlParameter = GenerateSqlParameter(Table);
-            if(!GenerateStoredProcedure(Table, sqlParameter, ObjectName))
+            if (GenerateStoredProcedure(Table, sqlParameter, ObjectName))
             {
-                return null;
+                if (Table.IsPrimaryKeyIdentity)
+                    return GenerateDataAccessInsertIdentity(Table, Parameter, ObjectName);
+                else
+                    return GenerateDataAccessInsert(Table, Parameter, ObjectName);
             }
-            if (Table.IsPrimaryKeyIdentity)
-                return GenerateDataAccessInsertIdentity(Table, Parameter, ObjectName);
-            else
-                return GenerateDataAccessInsert(Table, Parameter, ObjectName);
+            return null;
             
         }
     }

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Business_Layer
 {
-    static internal class clsDataAccessLayerListCodeGenerator
+    public class clsDataAccessLayerListCodeGenerator: IDataAccessLayerCodeGenerator
     {
-        static private bool GenerateStoredProcedure(ITableInfo Table)
+         private bool GenerateStoredProcedure(ITableInfo Table)
         {
             string StoredProcudure = $@"Create Procedure [dbo].[SP_List{Table.TableName}]
 AS
@@ -21,7 +21,7 @@ END";
 
 
         enum enListMode { Syncronons , Asyncronons}
-        static private string GenerateDataAccessLayerListCode(ITableInfo Table , enListMode ListMode)
+         private string GenerateDataAccessLayerListCode(ITableInfo Table , enListMode ListMode)
         {
             string Code = $@"{((ListMode == enListMode.Asyncronons) ? "async " : "")}static public {((ListMode == enListMode.Asyncronons)?"Task<":"")}DataTable{((ListMode == enListMode.Asyncronons) ? ">" : "")} List{((ListMode == enListMode.Asyncronons) ? "Async" : "")}()
         {{
@@ -53,15 +53,16 @@ END";
             return Code;
         }
 
-        static public string GenerateCode(ITableInfo tableInfo)
+         public string GenerateCode(ITableInfo tableInfo , string ObjectName)
         {
             if (GenerateStoredProcedure(tableInfo))
             {
-                string Code = GenerateDataAccessLayerListCode(tableInfo,enListMode.Syncronons);
+                string Code = GenerateDataAccessLayerListCode(tableInfo, enListMode.Syncronons);
                 Code += "\n" + GenerateDataAccessLayerListCode(tableInfo, enListMode.Asyncronons);
                 return Code;
             }
-            else return null;
+            return null;
+
         }
     }
 }

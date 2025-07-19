@@ -40,12 +40,17 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Utility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Utility\bin\Debug\Utility.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clsDataAccessCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerDeleteCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerFindCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerInsertCodeGenerator.cs" />
+    <Compile Include="clsDataAccessLayerIsExistsCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerListCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerUpdateCodeGenerator.cs" />
     <Compile Include="clsTable.cs" />

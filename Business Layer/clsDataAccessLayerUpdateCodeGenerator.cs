@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Business_Layer
 {
-    static internal class clsDataAccessLayerUpdateCodeGenerator
+    public class clsDataAccessLayerUpdateCodeGenerator: IDataAccessLayerCodeGenerator
     {
 
-        static private string GenerateCParameters(ITableInfo Table)
+         private string GenerateCParameters(ITableInfo Table)
         {
             string Parameter = "";
             Parameter = string.Join(",", Table.Columns.Select(kvp => $"{kvp.Value.DataType} {kvp.Key}"));
@@ -18,14 +18,14 @@ namespace Business_Layer
 
         }
 
-        static private string GenerateSqlParameter(ITableInfo Table)
+         private string GenerateSqlParameter(ITableInfo Table)
         {
             string Parameter = "";
             Parameter = string.Join(",", Table.Columns.Select(kvp => $"@{kvp.Key} {kvp.Value.SqlDataType}"));
             return Parameter;
         }
 
-        static private bool GenerateStoredProcedure(ITableInfo Table, string Parameters, string ObjectName)
+         private bool GenerateStoredProcedure(ITableInfo Table, string Parameters, string ObjectName)
         {
             string StoredProcedure = $@"Create procedure [dbo].[SP_Update{ObjectName}] ({Parameters})
 
@@ -41,7 +41,7 @@ END ";
             return clsExecuteStoredProcedureData.AddStoredProcedure(Table.ConnectionString, StoredProcedure);
         }
 
-        static private string GenerateDataAccessLayerUpdate(ITableInfo Table , string CParameters , string ObjectName)
+         private string GenerateDataAccessLayerUpdate(ITableInfo Table , string CParameters , string ObjectName)
         {
             string Code = $@"static public bool Update({CParameters})
         {{
@@ -86,10 +86,9 @@ END ";
             return Code;
         }
 
-        static public string CodeGenerate(ITableInfo tableInfo , string ObjectName)
+         public string GenerateCode(ITableInfo tableInfo , string ObjectName)
         {
-            if (!GenerateStoredProcedure(tableInfo, GenerateSqlParameter(tableInfo), ObjectName))
-                return null;
+            GenerateStoredProcedure(tableInfo, GenerateSqlParameter(tableInfo), ObjectName);
             return GenerateDataAccessLayerUpdate(tableInfo,GenerateCParameters(tableInfo),ObjectName);
         }
 

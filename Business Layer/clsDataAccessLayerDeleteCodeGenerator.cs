@@ -8,34 +8,34 @@ using System.Threading.Tasks;
 
 namespace Business_Layer
 {
-    static internal class clsDataAccessLayerDeleteCodeGenerator
+    public class clsDataAccessLayerDeleteCodeGenerator : IDataAccessLayerCodeGenerator
     {
-        static private string GenerateSqlParameters(ITableInfo Table , ICollection<string> Columns)
+         private string GenerateSqlParameters(ITableInfo Table , ICollection<string> Columns)
         {
             return string.Join("," , Table.Columns.
                 Where(kvp => Columns.Contains(kvp.Key)).
                 Select(kvp=> $"@{kvp.Key} {kvp.Value.SqlDataType}"));
         }
 
-        static private string GenerateCParameters(ITableInfo Table, ICollection<string> Columns)
+         private string GenerateCParameters(ITableInfo Table, ICollection<string> Columns)
         {
             return string.Join(",", Table.Columns.
                 Where(kvp => Columns.Contains(kvp.Key)).
                 Select(kvp => $"{kvp.Value.DataType} {kvp.Key} "));
         }
 
-        static private bool GenerateStoredProcedure(ITableInfo Table  , string Parameters, string ObjectName , ICollection<string> DeleteByColumns)
+         private bool GenerateStoredProcedure(ITableInfo Table  , string Parameters, string ObjectName , ICollection<string> DeleteByColumns)
         {
             string StoredProcedure = $@"Create Procedure  [dbo].[SP_Delete{ObjectName}By{string.Join("And", DeleteByColumns)}]
 ({Parameters}) AS
 BEGIN
-	Delete From {Table.TableName} Where {string.Join("AND", DeleteByColumns.Select(item => $"{item} = @{item}"))}
+	Delete From [{Table.TableName}] Where {string.Join("AND", DeleteByColumns.Select(item => $"{item} = @{item}"))}
 END";
             return clsExecuteStoredProcedureData.AddStoredProcedure(Table.ConnectionString, StoredProcedure);
         }
 
 
-        static private string GenerateDataAccessLayerDeleteCode(ITableInfo Table, string Parameters, string ObjectName, ICollection<string> DeleteByColumns)
+         private string GenerateDataAccessLayerDeleteCode(ITableInfo Table, string Parameters, string ObjectName, ICollection<string> DeleteByColumns)
         {
             string Code = $@"static public bool Delete({Parameters})
         {{
@@ -72,7 +72,7 @@ END";
 
 
 
-        static public string GenerateCode(ITableInfo Table , string ObjectName)
+         public string GenerateCode(ITableInfo Table , string ObjectName)
         {
             string Code = "";
             Dictionary<string, HashSet<string>> columns = new Dictionary<string, HashSet<string>>();
@@ -84,7 +84,7 @@ END";
 
             foreach(var kvp in columns)
             {
-                if (GenerateStoredProcedure(Table, GenerateSqlParameters(Table, kvp.Value), ObjectName, kvp.Value))
+               if( GenerateStoredProcedure(Table, GenerateSqlParameters(Table, kvp.Value), ObjectName, kvp.Value))
                     Code += GenerateDataAccessLayerDeleteCode(Table, GenerateCParameters(Table, kvp.Value), ObjectName, kvp.Value);
             }
             return Code;

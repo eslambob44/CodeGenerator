@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace Business_Layer
 {
-    static internal class clsDataAccessLayerFindCodeGenerator
+    public class clsDataAccessLayerFindCodeGenerator: IDataAccessLayerCodeGenerator
     {
 
 
-        static private string GenerateSqlParameters(ITableInfo Table, ICollection<string> Columns)
+         private string GenerateSqlParameters(ITableInfo Table, ICollection<string> Columns)
         {
             return string.Join(",", Table.Columns.
                 Where(kvp => Columns.Contains(kvp.Key)).
                 Select(kvp => $"@{kvp.Key} {kvp.Value.SqlDataType}"));
         }
 
-        static private string GenerateCParameters(ITableInfo Table, ICollection<string> Columns)
+         private string GenerateCParameters(ITableInfo Table, ICollection<string> Columns)
         {
             string Param =  string.Join(",", Table.Columns.
                 Where(kvp => Columns.Contains(kvp.Key)).
@@ -27,18 +27,18 @@ namespace Business_Layer
             return Param;
         }
 
-        static private bool GenerateStoredProcedure(ITableInfo Table, string Parameters, string ObjectName, ICollection<string> FindByColumns)
+         private bool GenerateStoredProcedure(ITableInfo Table, string Parameters, string ObjectName, ICollection<string> FindByColumns)
         {
             string StoredProcedure = $@"Create Procedure  [dbo].[SP_Find{ObjectName}By{string.Join("And", FindByColumns)}]
 ({Parameters}) AS
 BEGIN
-	SELECT * FROM {Table.TableName} Where {string.Join("AND", FindByColumns.Select(item => $"{item} = @{item}"))}
+	SELECT * FROM [{Table.TableName}] Where {string.Join("AND", FindByColumns.Select(item => $"{item} = @{item}"))}
 END";
             return clsExecuteStoredProcedureData.AddStoredProcedure(Table.ConnectionString, StoredProcedure);
         }
 
 
-        static private string GenerateDataAccessLayerFindCode(ITableInfo Table, string Parameters, string ObjectName, ICollection<string> FindByColumns)
+         private string GenerateDataAccessLayerFindCode(ITableInfo Table, string Parameters, string ObjectName, ICollection<string> FindByColumns)
         {
             string Code = $@"static public bool Find({Parameters})
         {{
@@ -93,7 +93,7 @@ END";
 
 
 
-        static public string GenerateCode(ITableInfo Table, string ObjectName)
+         public string GenerateCode(ITableInfo Table, string ObjectName)
         {
             string Code = "";
             Dictionary<string, HashSet<string>> columns = new Dictionary<string, HashSet<string>>();
@@ -105,7 +105,7 @@ END";
 
             foreach (var kvp in columns)
             {
-                if (GenerateStoredProcedure(Table, GenerateSqlParameters(Table, kvp.Value), ObjectName, kvp.Value))
+                if(GenerateStoredProcedure(Table, GenerateSqlParameters(Table, kvp.Value), ObjectName, kvp.Value))
                     Code += "\n"+GenerateDataAccessLayerFindCode(Table, GenerateCParameters(Table, kvp.Value), ObjectName, kvp.Value);
             }
             return Code;
