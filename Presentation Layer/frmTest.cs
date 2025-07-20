@@ -21,7 +21,8 @@ namespace Presentation_Layer
             IDataAccessLayerCodeGenerator[] DataAccessCodeGenerators = {new clsDataAccessLayerInsertCodeGenerator() , new clsDataAccessLayerUpdateCodeGenerator() ,
             new clsDataAccessLayerFindCodeGenerator() , new clsDataAccessLayerListCodeGenerator() , new clsDataAccessLayerDeleteCodeGenerator()
             ,new clsDataAccessLayerIsExistsCodeGenerator()};
-            ICodeGenerator[] CodeGenerators = { new clsDataAccessCodeGenerator(DataAccessCodeGenerators) , new clsBusinessLayerCodeGenerator(new IBusinessLayerCodeGenerator[0])  };
+            IBusinessLayerCodeGenerator[] BusinessCodeGenerators = { new clsBusinessLayerFindCodeGenerator() };
+            ICodeGenerator[] CodeGenerators = { new clsDataAccessCodeGenerator(DataAccessCodeGenerators) , new clsBusinessLayerCodeGenerator(BusinessCodeGenerators)  };
             Table.GenerateCode( CodeGenerators , "Category");
             
         }
