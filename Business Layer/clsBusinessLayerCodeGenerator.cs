@@ -37,6 +37,9 @@ namespace Business_Layer
             {
                 Code.AppendLine(codeGenerator.GenerateCode(TableInfo, ObjectName));
             }
+
+            clsBusinessLayerSaveCodeGenerator SavecodeGenerator = new clsBusinessLayerSaveCodeGenerator(Code.ToString());
+            Code.AppendLine(SavecodeGenerator.GenerateCode(TableInfo, ObjectName));
             Code.AppendLine("}");
             if(!Directory.Exists(FolderLocation))
                 FolderLocation = "D:\\";
