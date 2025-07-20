@@ -49,6 +49,7 @@
     <Compile Include="clsBusinessLayerCodeGenerator.cs" />
     <Compile Include="clsBusinessLayerDeleteCodeGenerator.cs" />
     <Compile Include="clsBusinessLayerFindCodeGenerator.cs" />
+    <Compile Include="clsBusinessLayerInsertCodeGenerator.cs" />
     <Compile Include="clsBusinessLayerListCodeGenerator.cs" />
     <Compile Include="clsBusinessLayerUpdateCodeGenerator.cs" />
     <Compile Include="clsDataAccessCodeGenerator.cs" />
