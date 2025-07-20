@@ -17,12 +17,12 @@ namespace Presentation_Layer
         {
             InitializeComponent();
             clsTables Tables = clsTables.GetObject("Server =.;Database = Inventory;User Id = sa ; Password = Eslamyasse1");
-            clsTable Table = Tables.GetTable("Suppliere'sProducts");
+            clsTable Table = Tables.GetTable("Categories");
             IDataAccessLayerCodeGenerator[] DataAccessCodeGenerators = {new clsDataAccessLayerInsertCodeGenerator() , new clsDataAccessLayerUpdateCodeGenerator() ,
             new clsDataAccessLayerFindCodeGenerator() , new clsDataAccessLayerListCodeGenerator() , new clsDataAccessLayerDeleteCodeGenerator()
             ,new clsDataAccessLayerIsExistsCodeGenerator()};
-            ICodeGenerator[] CodeGenerators = { new clsDataAccessCodeGenerator(DataAccessCodeGenerators) };
-            Table.GenerateCode( CodeGenerators , "Supplier_sProduct");
+            ICodeGenerator[] CodeGenerators = { new clsDataAccessCodeGenerator(DataAccessCodeGenerators) , new clsBusinessLayerCodeGenerator(new IBusinessLayerCodeGenerator[0])  };
+            Table.GenerateCode( CodeGenerators , "Category");
             
         }
     }

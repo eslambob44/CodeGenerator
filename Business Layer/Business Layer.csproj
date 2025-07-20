@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="clsBusinessLayerCodeGenerator.cs" />
     <Compile Include="clsDataAccessCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerDeleteCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerFindCodeGenerator.cs" />

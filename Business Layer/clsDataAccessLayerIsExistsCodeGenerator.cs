@@ -43,14 +43,14 @@ END ";
 
         private string GenerateDataAccessLayerIsUsedBeforeCode(ITableInfo Table, string Parameters, string ObjectName, ICollection<string> UniqueColumns)
         {
-            string Code = $@"static public bool Is{string.Join("And", UniqueColumns)}UserBefore({Parameters})
+            string Code = $@"static public bool Is{string.Join("And", UniqueColumns)}UsedBefore({Parameters})
         {{
             bool IsUsed = false;
             try
             {{
                 using (SqlConnection Connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
                 {{
-                    using (SqlCommand Command = new SqlCommand(""SP_Is{string.Join("And", UniqueColumns)}_UsedBeforeIn{Table.TableName}"", Connection))
+                    using (SqlCommand Command = new SqlCommand(""SP_Is{string.Join("And", UniqueColumns)}UsedBeforeIn{Table.TableName}"", Connection))
                     {{
                         Command.CommandType = CommandType.StoredProcedure;
                         ";

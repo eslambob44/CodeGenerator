@@ -28,21 +28,12 @@ namespace Business_Layer
                 GeneratedCode.AppendLine(item.GenerateCode(TableInfo, ObjectName)) ;
             }
 
-            StringBuilder Code= new StringBuilder($@"using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data;
-
-namespace Data_Access_Layer
-{{
+            StringBuilder Code= new StringBuilder($@"
     static public class cls{ObjectName}Data
     {{
-        static public event Action<Exception> OnErrorOccur;") ;
+        static public event Action<Exception> OnErrorOccur;"+"\n") ;
             Code.AppendLine(GeneratedCode.ToString());
-            Code.AppendLine ("\t}\n}");
+            Code.AppendLine ("\t}");
 
             Utility.clsIO.WriteToFile(FolderLocation, $"cls{ObjectName}Data.cs", Code.ToString());
             

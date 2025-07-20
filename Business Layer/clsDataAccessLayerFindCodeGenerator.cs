@@ -67,7 +67,7 @@ END";
             {
                 if(Table.NullableColumns.Contains(kvp.Key))
                 {
-                    Code += $"\nif(Reader[{kvp.Key}] == DBNull.Value)";
+                    Code += $"\nif(Reader[\"{kvp.Key}\"] == DBNull.Value)";
                     Code += $"\n{kvp.Key} = null;";
                     Code += $"\nelse";
                 }
