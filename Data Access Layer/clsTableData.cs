@@ -136,18 +136,12 @@ namespace Data_Access_Layer
                 using (SqlConnection Connection = new SqlConnection((string)ConnectionString))
                 {
                     string Query = @"
-                                	SELECT 
-                                    1 as IsPrimaryKeyIdentity
-                                FROM 
-                                    sys.columns c
-                                    INNER JOIN sys.tables t ON c.object_id = t.object_id
-                                    LEFT JOIN sys.index_columns ic 
-                                    ON c.object_id = ic.object_id AND c.column_id = ic.column_id
-                                    LEFT JOIN sys.indexes i 
-                                    ON ic.object_id = i.object_id AND ic.index_id = i.index_id
-                                WHERE 
-                                    t.name = @TableName
-                                    AND i.is_primary_key = 1;
+                                	SELECT 1
+
+FROM 
+    sys.identity_columns
+WHERE 
+    object_id = OBJECT_ID(@TableName);;
 
 ";
                     using (SqlCommand Command = new SqlCommand(Query, Connection))

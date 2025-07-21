@@ -34,7 +34,7 @@ END";
                     {{
                         Command.CommandType = CommandType.StoredProcedure;
                         Connection.Open();
-                        using (SqlDataReader Reader = {((ListMode == enListMode.Asyncronons) ? "await" : "")}Command.ExecuteReader{((ListMode == enListMode.Asyncronons) ? "Async" : "")}())
+                        using (SqlDataReader Reader = {((ListMode == enListMode.Asyncronons) ? "await " : "")}Command.ExecuteReader{((ListMode == enListMode.Asyncronons) ? "Async" : "")}())
                         {{
                             if (Reader.HasRows)
                             {{

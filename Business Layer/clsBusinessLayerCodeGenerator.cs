@@ -26,7 +26,7 @@ namespace Business_Layer
 ");
             foreach(var kvp in TableInfo.Columns.Where(kvp => TableInfo.PrimaryKeys.Contains(kvp.Key)))
             {
-                Code.AppendLine($"public {kvp.Value.DataType} {kvp.Key} {{get; private set;}}");
+                Code.AppendLine($"public {kvp.Value.DataType} {kvp.Key} {{get;{((TableInfo.IsPrimaryKeyIdentity)?"private":"")} set;}}");
             }
             foreach(var kvp in TableInfo.Columns.Where(kvp => !TableInfo.PrimaryKeys.Contains(kvp.Key)))
             {

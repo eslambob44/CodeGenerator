@@ -30,8 +30,8 @@ namespace Business_Layer
             switch (sqlDataType)
             {
                 // Reference types (return immediately)
-                case "nvarchar":
-                case "varchar":
+                case "nvarchar(max)":
+                case "varchar(max)":
                 case "char":
                 case "nchar":
                 case "text":
@@ -144,6 +144,8 @@ namespace Business_Layer
                 bool IsNullable = row["IS_NULLABLE"].ToString() == "YES";
                 stDataType type = new stDataType();
                 type.SqlDataType = row["DATA_TYPE"].ToString();
+                if (type.SqlDataType == "nvarchar" || type.SqlDataType == "varchar")
+                    type.SqlDataType += "(max)";
                 type.DataType = MapSqlDataTypeToCDataType(type.SqlDataType, IsNullable);
                 if (IsNullable)
                     NullableColumns.Add(row["COLUMN_NAME"].ToString());

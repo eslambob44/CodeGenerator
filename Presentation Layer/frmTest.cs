@@ -16,15 +16,16 @@ namespace Presentation_Layer
         public frmTest()
         {
             InitializeComponent();
-            clsTables Tables = clsTables.GetObject("Server =.;Database = Inventory;User Id = sa ; Password = Eslamyasse1");
-            clsTable Table = Tables.GetTable("Categories");
-            IDataAccessLayerCodeGenerator[] DataAccessCodeGenerators = {new clsDataAccessLayerInsertCodeGenerator() , new clsDataAccessLayerUpdateCodeGenerator() ,
+            clsTables Tables = clsTables.GetObject("Server =.;Database = HR;User Id = sa ; Password = Eslamyasse1");
+            clsTable Table = Tables.GetTable("Employees");
+            IDataAccessLayerCodeGenerator[] DataAccessCodeGenerators = {new clsDataAccessLayerInsertCodeGenerator()  ,
             new clsDataAccessLayerFindCodeGenerator() , new clsDataAccessLayerListCodeGenerator() , new clsDataAccessLayerDeleteCodeGenerator()
-            ,new clsDataAccessLayerIsExistsCodeGenerator()};
+            ,new clsDataAccessLayerIsExistsCodeGenerator() , new clsDataAccessLayerUpdateCodeGenerator()};
             IBusinessLayerCodeGenerator[] BusinessCodeGenerators = { new clsBusinessLayerFindCodeGenerator() , new clsBusinessLayerDeleteCodeGenerator()
-            ,new clsBusinessLayerListCodeGenerator() , new clsBusinessLayerUpdateCodeGenerator() , new clsBusinessLayerInsertCodeGenerator()};
+            ,new clsBusinessLayerListCodeGenerator() , new clsBusinessLayerInsertCodeGenerator()
+            ,new clsBusinessLayerIsExistsCodeGenerator() , new clsBusinessLayerUpdateCodeGenerator()};
             ICodeGenerator[] CodeGenerators = { new clsDataAccessCodeGenerator(DataAccessCodeGenerators) , new clsBusinessLayerCodeGenerator(BusinessCodeGenerators)  };
-            Table.GenerateCode( CodeGenerators , "Category");
+            Table.GenerateCode( CodeGenerators , "Employee");
             
         }
     }

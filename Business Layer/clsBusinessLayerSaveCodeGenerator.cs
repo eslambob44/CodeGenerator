@@ -19,7 +19,7 @@ namespace Business_Layer
 
         bool CheckForExistance(enMode enMode) 
         {
-            return Code.IndexOf(enMode.ToString()) != -1;
+            return Code.IndexOf($"_{enMode.ToString()}()") != -1;
         }
 
         string GenerateFunction()

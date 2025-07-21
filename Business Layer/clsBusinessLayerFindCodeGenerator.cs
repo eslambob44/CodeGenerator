@@ -26,11 +26,12 @@ namespace Business_Layer
             }
             Code +=
             $@"
-            if (cls{ObjectName}Data.Find({string.Join("," , FindByParameters)},{string.Join("," , Table.Columns.Where(kvp => !FindByParameters.Contains(kvp.Key)).Select(kvp=> $"ref {kvp.Key}"))})
+            if (cls{ObjectName}Data.Find({string.Join("," , FindByParameters)},{string.Join("," , Table.Columns.Where(kvp => !FindByParameters.Contains(kvp.Key)).Select(kvp=> $"ref {kvp.Key}"))}))
             {{
                 return new cls{ObjectName}({string.Join("," , Table.Columns.Select(kvp => kvp.Key))});
             }}
             else return null;
+        }}
         ";
 
             return Code;
