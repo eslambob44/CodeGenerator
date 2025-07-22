@@ -95,6 +95,8 @@ namespace Presentation_Layer
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK) 
             {
+                
+
                 clsRegistry.WriteToRegistry("FolderLocation" , folderBrowserDialog1.SelectedPath);
             }
         }
