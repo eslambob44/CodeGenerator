@@ -33,7 +33,7 @@ AS
 BEGIN 
 	
 	SELECT 1 FROM [{Table.TableName}]
-	Where {string.Join("AND" , UniqueColumns.Select(item =>$"{item} = @{item}"))};
+	Where {string.Join("AND " , UniqueColumns.Select(item =>$"{item} = @{item} "))};
 	return @@ROWCOUNT;
 	
 END ";

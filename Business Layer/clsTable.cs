@@ -207,9 +207,9 @@ namespace Business_Layer
             else return null;
         }
 
-        public string GenerateCode(ICodeGenerator[] CodeGenerators , string ObjectName)
+        public string GenerateCode(ICodeGenerator[] CodeGenerators , string ObjectName , string FolderLocation)
         {
-            string FolderLocation = ConfigurationManager.AppSettings["FolderLocation"];
+
 
             bool IsExcuted = true;
             foreach(var codeGenerator in CodeGenerators)

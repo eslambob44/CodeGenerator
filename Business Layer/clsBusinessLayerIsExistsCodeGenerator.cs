@@ -20,7 +20,7 @@ namespace Business_Layer
         {
             string Code = $@"static public bool Is{string.Join("And" , UniqueParameters)}UsedBefore({GenerateParameters(Table, UniqueParameters)})
         {{
-            return return cls{ObjectName}Data.Is{string.Join("And", UniqueParameters)}UsedBefore({string.Join("," , UniqueParameters)});
+            return cls{ObjectName}Data.Is{string.Join("And", UniqueParameters)}UsedBefore({string.Join("," , UniqueParameters)});
         }}";
             return Code;
         }

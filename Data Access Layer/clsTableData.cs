@@ -168,29 +168,43 @@ WHERE
                 using (SqlConnection Connection = new SqlConnection((string)ConnectionString))
                 {
                     string Query = @"SELECT 
-                                    t.name AS TableName,
-                                    c.name AS ColumnName,
-                                    i.name AS ConstraintName,
-                                    'UNIQUE' AS ConstraintType,
-                                    ic.key_ordinal AS KeyOrder
+                                    OBJECT_NAME(uc.parent_object_id) AS TableName,
+                                    uc.name AS ConstraintName,
+                                    'UNIQUE CONSTRAINT' AS ConstraintType,
+                                    COL_NAME(uc.parent_object_id, c.column_id) AS ColumnName,
+                                    c.index_column_id AS KeyOrder
                                 FROM 
-                                    sys.tables t
-                                    INNER JOIN sys.indexes i ON t.object_id = i.object_id
-                                    INNER JOIN sys.index_columns ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id
-                                    INNER JOIN sys.columns c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
+                                    sys.key_constraints uc
+                                JOIN 
+                                    sys.index_columns c ON uc.parent_object_id = c.object_id AND uc.unique_index_id = c.index_id
+                                WHERE 
+                                    uc.type = 'UQ' -- Unique constraints only
+                                    AND OBJECT_NAME(uc.parent_object_id) = @TableName
+                                
+                                UNION
+                                
+                                SELECT 
+                                    OBJECT_NAME(i.object_id) AS table_name,
+                                    i.name AS constraint_name,
+                                    'UNIQUE INDEX' AS constraint_type,
+                                    COL_NAME(i.object_id, ic.column_id) AS column_name,
+                                    ic.index_column_id AS ordinal_position
+                                FROM 
+                                    sys.indexes i
+                                JOIN 
+                                    sys.index_columns ic ON i.object_id = ic.object_id AND i.index_id = ic.index_id
                                 WHERE 
                                     i.is_unique = 1
                                     AND i.is_primary_key = 0
                                     AND NOT EXISTS (
-                                        -- Exclude columns that are part of foreign keys
                                         SELECT 1 
-                                        FROM sys.foreign_key_columns fkc 
-                                        WHERE fkc.parent_object_id = t.object_id 
-                                        AND fkc.parent_column_id = c.column_id
+                                        FROM sys.key_constraints kc 
+                                        WHERE kc.unique_index_id = i.index_id 
+                                        AND kc.parent_object_id = i.object_id
                                     )
-                                    AND t.name = @TableName
+                                    AND OBJECT_NAME(i.object_id) = @TableName
                                 ORDER BY 
-                                    i.name, ic.key_ordinal;";
+                                    ConstraintName, KeyOrder;";
                     using (SqlCommand Command = new SqlCommand(Query, Connection))
                     {
                         Command.Parameters.AddWithValue("@TableName", TableName);

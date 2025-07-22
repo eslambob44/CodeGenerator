@@ -58,7 +58,8 @@ namespace Data_Access_Layer
                     string Query = @"SELECT INFORMATION_SCHEMA.TABLES.TABLE_NAME 
                                     FROM INFORMATION_SCHEMA.TABLES
                                     WHERE TABLE_TYPE = 'BASE TABLE' 
-                                    AND INFORMATION_SCHEMA.TABLES.TABLE_CATALOG=DB_NAME()";
+                                    AND INFORMATION_SCHEMA.TABLES.TABLE_CATALOG=DB_NAME()
+									And Table_Name <> 'sysdiagrams'";
                     using(SqlCommand Command = new SqlCommand(Query, Connection))
                     {
                         Connection.Open ();

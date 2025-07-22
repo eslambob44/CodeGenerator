@@ -25,7 +25,7 @@ namespace Presentation_Layer
             ,new clsBusinessLayerListCodeGenerator() , new clsBusinessLayerInsertCodeGenerator()
             ,new clsBusinessLayerIsExistsCodeGenerator() , new clsBusinessLayerUpdateCodeGenerator()};
             ICodeGenerator[] CodeGenerators = { new clsDataAccessCodeGenerator(DataAccessCodeGenerators) , new clsBusinessLayerCodeGenerator(BusinessCodeGenerators)  };
-            Table.GenerateCode( CodeGenerators , "Employee");
+            //Table.GenerateCode( CodeGenerators , "Employee");
             
         }
     }

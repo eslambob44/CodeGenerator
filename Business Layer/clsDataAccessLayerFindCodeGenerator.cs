@@ -32,7 +32,7 @@ namespace Business_Layer
             string StoredProcedure = $@"Create Procedure  [dbo].[SP_Find{ObjectName}By{string.Join("And", FindByColumns)}]
 ({Parameters}) AS
 BEGIN
-	SELECT * FROM [{Table.TableName}] Where {string.Join("AND", FindByColumns.Select(item => $"{item} = @{item}"))}
+	SELECT * FROM [{Table.TableName}] Where {string.Join("AND ", FindByColumns.Select(item => $"{item} = @{item} "))}
 END";
             return clsExecuteStoredProcedureData.AddStoredProcedure(Table.ConnectionString, StoredProcedure);
         }

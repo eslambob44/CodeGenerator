@@ -29,7 +29,7 @@ namespace Business_Layer
             string StoredProcedure = $@"Create Procedure  [dbo].[SP_Delete{ObjectName}By{string.Join("And", DeleteByColumns)}]
 ({Parameters}) AS
 BEGIN
-	Delete From [{Table.TableName}] Where {string.Join("AND", DeleteByColumns.Select(item => $"{item} = @{item}"))}
+	Delete From [{Table.TableName}] Where {string.Join("AND ", DeleteByColumns.Select(item => $"{item} = @{item} "))}
 END";
             return clsExecuteStoredProcedureData.AddStoredProcedure(Table.ConnectionString, StoredProcedure);
         }
@@ -44,7 +44,7 @@ END";
             {{
                 using (SqlConnection Connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
                 {{
-                    using (SqlCommand Command = new SqlCommand(""SP_Delete{Table.TableName}By{string.Join("And", DeleteByColumns)}"", Connection))
+                    using (SqlCommand Command = new SqlCommand(""SP_Delete{ObjectName}By{string.Join("And", DeleteByColumns)}"", Connection))
                     {{
                         Command.CommandType = System.Data.CommandType.StoredProcedure;
                         ";
