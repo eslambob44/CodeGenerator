@@ -48,14 +48,17 @@
   <ItemGroup>
     <Compile Include="clsBusinessLayerCodeGenerator.cs" />
     <Compile Include="clsBusinessLayerDeleteCodeGenerator.cs" />
+    <Compile Include="clsBusinessLayerDTOCodeGenerator.cs" />
     <Compile Include="clsBusinessLayerFindCodeGenerator.cs" />
     <Compile Include="clsBusinessLayerInsertCodeGenerator.cs" />
     <Compile Include="clsBusinessLayerIsExistsCodeGenerator.cs" />
     <Compile Include="clsBusinessLayerListCodeGenerator.cs" />
+    <Compile Include="clsBusinessLayerPropertiesCodeGenerator.cs" />
     <Compile Include="clsBusinessLayerSaveCodeGenerator.cs" />
     <Compile Include="clsBusinessLayerUpdateCodeGenerator.cs" />
     <Compile Include="clsDataAccessCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerDeleteCodeGenerator.cs" />
+    <Compile Include="clsDataAccessLayerDTOCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerFindCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerInsertCodeGenerator.cs" />
     <Compile Include="clsDataAccessLayerIsExistsCodeGenerator.cs" />

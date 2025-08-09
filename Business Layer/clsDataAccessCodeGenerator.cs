@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Server;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace Business_Layer
             if (!Directory.Exists(FolderLocation)) FolderLocation = "D:\\";
 
             StringBuilder GeneratedCode = new StringBuilder("");
+            clsDataAccessLayerDTOCodeGenerator DTOGenerator = new clsDataAccessLayerDTOCodeGenerator();
+            string DTO = DTOGenerator.GenerateCode(TableInfo, ObjectName);
             foreach (var item in CodeGenerators) 
             {
                 GeneratedCode.AppendLine(item.GenerateCode(TableInfo, ObjectName)) ;
@@ -32,6 +35,7 @@ namespace Business_Layer
     static public class cls{ObjectName}Data
     {{
         static public event Action<Exception> OnErrorOccur;"+"\n") ;
+            Code.AppendLine(DTO);
             Code.AppendLine(GeneratedCode.ToString());
             Code.AppendLine ("\t}");
 

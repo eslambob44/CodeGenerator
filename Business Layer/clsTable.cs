@@ -32,8 +32,8 @@ namespace Business_Layer
                 // Reference types (return immediately)
                 case "nvarchar(max)":
                 case "varchar(max)":
-                case "char":
-                case "nchar":
+                case "char(255)":
+                case "nchar(255)":
                 case "text":
                 case "ntext":
                 case "xml":
@@ -146,6 +146,8 @@ namespace Business_Layer
                 type.SqlDataType = row["DATA_TYPE"].ToString();
                 if (type.SqlDataType == "nvarchar" || type.SqlDataType == "varchar")
                     type.SqlDataType += "(max)";
+                if (type.SqlDataType == "char" || type.SqlDataType == "nchar")
+                    type.SqlDataType += "(255)";
                 type.DataType = MapSqlDataTypeToCDataType(type.SqlDataType, IsNullable);
                 if (IsNullable)
                     NullableColumns.Add(row["COLUMN_NAME"].ToString());

@@ -18,17 +18,14 @@ namespace Business_Layer
         {
             string Code = $@"static public cls{ObjectName} Find({GenerateParameters(Table, FindByParameters)})
         {{
+            cls{ObjectName}Data.{ObjectName}DTO DTO = cls{ObjectName}Data.Find({string.Join(",", FindByParameters)});
             ";
-            foreach (var kvp in Table.Columns.Where(kvp=> !FindByParameters.Contains(kvp.Key) ))
-            {
-                Code += $"\n{kvp.Value.DataType} {kvp.Key} = default({kvp.Value.DataType});";
-
-            }
+            
             Code +=
             $@"
-            if (cls{ObjectName}Data.Find({string.Join("," , FindByParameters)},{string.Join("," , Table.Columns.Where(kvp => !FindByParameters.Contains(kvp.Key)).Select(kvp=> $"ref {kvp.Key}"))}))
+            if (DTO != null)
             {{
-                return new cls{ObjectName}({string.Join("," , Table.Columns.Select(kvp => kvp.Key))});
+                return new cls{ObjectName}(DTO);
             }}
             else return null;
         }}
@@ -39,10 +36,10 @@ namespace Business_Layer
 
         private string GenerateConstructor(ITableInfo Table , string ObjectName)
         {
-            string Code = $@"private cls{ObjectName}({string.Join("," , Table.Columns.Select(kvp => $"{kvp.Value.DataType} {kvp.Key}"))})
+            string Code = $@"private cls{ObjectName}({ObjectName}DTO DTO)
         {{
             _Mode = enMode.Update;
-            {string.Join("\n" , Table.Columns.Select(kvp=>$"this.{kvp.Key} = {kvp.Key};"))}
+            {string.Join("\n" , Table.Columns.Select(kvp=>$"this.{kvp.Key} = DTO.{kvp.Key};"))}
 
         }}";
             return Code;

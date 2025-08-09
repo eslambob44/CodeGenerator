@@ -12,7 +12,7 @@ namespace Business_Layer
         {
             string Code = $@"private bool _AddNew()
 {{
-    {string .Join("," , Table.Columns.Where(kvp => Table.PrimaryKeys.Contains(kvp.Key)).Select(kvp=>$"{kvp.Value.DataType}? {kvp.Key}"))} = cls{ObjectName}Data.Insert({string.Join("," , Table.Columns.Where(kvp => !Table.PrimaryKeys.Contains(kvp.Key)).Select(kvp=>kvp.Key))});
+    {string .Join("," , Table.Columns.Where(kvp => Table.PrimaryKeys.Contains(kvp.Key)).Select(kvp=>$"{kvp.Value.DataType}? {kvp.Key}"))} = cls{ObjectName}Data.Insert(this.DTO);
     if ({Table.PrimaryKeys.First()} != null)
     {{
         this.{Table.PrimaryKeys.First()} = {Table.PrimaryKeys.First()}.Value;
@@ -28,7 +28,7 @@ namespace Business_Layer
         {
             string Code = $@"private bool _AddNew()
 {{
-    return cls{ObjectName}Data.Insert({string.Join(",", tableInfo.Columns.Keys)});
+    return cls{ObjectName}Data.Insert(this.DTO);
 }}";
             return Code;
         }

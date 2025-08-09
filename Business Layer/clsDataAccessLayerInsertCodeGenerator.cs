@@ -10,19 +10,14 @@ namespace Business_Layer
     public class clsDataAccessLayerInsertCodeGenerator: IDataAccessLayerCodeGenerator
     {
         
-         private string GenerateCParameters(ITableInfo Table)
+         private string GenerateCParameters(ITableInfo Table , string ObjectName)
         {
             string Parameter = "";
             
-            if(Table.IsPrimaryKeyIdentity)
-            {
-                Parameter = string.Join(",", Table.Columns.Where(kvp => !Table.PrimaryKeys.Contains(kvp.Key))
-                .Select(kvp => $"{kvp.Value.DataType} {kvp.Key}"));
-            }
-            else
-            {
-                Parameter = string.Join(",", Table.Columns.Select(kvp => $"{kvp.Value.DataType} {kvp.Key}"));
-            }
+            
+             Parameter = $"{ObjectName}DTO DTO";
+            
+           
             return Parameter;
             
         }
@@ -89,11 +84,11 @@ END";
             {
                 if(Table.NullableColumns.Contains(kvp.Key))
                 {
-                    Code += $"\n if({kvp.Key}== null)";
+                    Code += $"\n if(DTO.{kvp.Key}== null)";
                     Code += $"\n Command.Parameters.AddWithValue(\"@{kvp.Key}\" , DBNull.Value);";
                     Code += $"\n else";
                 }
-                Code += $"\n Command.Parameters.AddWithValue(\"@{kvp.Key}\" , {kvp.Key});";
+                Code += $"\n Command.Parameters.AddWithValue(\"@{kvp.Key}\" , DTO.{kvp.Key});";
                 
             }
 
@@ -138,11 +133,11 @@ END";
             {
                 if (Table.NullableColumns.Contains(kvp.Key))
                 {
-                    Code += $"\n if({kvp.Key}== null)";
+                    Code += $"\n if(DTO.{kvp.Key}== null)";
                     Code += $"\n Command.Parameters.AddWithValue(\"@{kvp.Key}\" , DBNull.Value);";
                     Code += $"\n else";
                 }
-                Code += $"\n Command.Parameters.AddWithValue(\"@{kvp.Key}\" , {kvp.Key});";
+                Code += $"\n Command.Parameters.AddWithValue(\"@{kvp.Key}\" , DTO.{kvp.Key});";
 
             }
 
@@ -168,7 +163,7 @@ END";
 
          public string GenerateCode(ITableInfo Table , string ObjectName)
         {
-            string Parameter = GenerateCParameters(Table);
+            string Parameter = GenerateCParameters(Table,ObjectName);
             string sqlParameter = GenerateSqlParameter(Table);
             if (GenerateStoredProcedure(Table, sqlParameter, ObjectName))
             {

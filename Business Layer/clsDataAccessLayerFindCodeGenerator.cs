@@ -23,7 +23,6 @@ namespace Business_Layer
             string Param =  string.Join(",", Table.Columns.
                 Where(kvp => Columns.Contains(kvp.Key)).
                 Select(kvp => $"{kvp.Value.DataType} {kvp.Key} "));
-            Param += "," + string.Join(",", Table.Columns.Where(kvp => !Columns.Contains(kvp.Key)).Select(kvp => $"ref {kvp.Value.DataType} {kvp.Key}"));
             return Param;
         }
 
@@ -40,9 +39,9 @@ END";
 
          private string GenerateDataAccessLayerFindCode(ITableInfo Table, string Parameters, string ObjectName, ICollection<string> FindByColumns)
         {
-            string Code = $@"static public bool Find({Parameters})
+            string Code = $@"static public {ObjectName}DTO Find({Parameters})
         {{
-            bool IsFound = false;
+            {ObjectName}DTO DTO = null;
             try
             {{
                 using (SqlConnection Connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
@@ -61,17 +60,17 @@ END";
                         {{
                             if (Reader.Read())
                             {{
-                                IsFound = true;
+                                DTO = new {ObjectName}DTO();
                                 ";
-            foreach (var kvp in Table.Columns.Where(kvp => !FindByColumns.Contains(kvp.Key)))
+            foreach (var kvp in Table.Columns)
             {
                 if(Table.NullableColumns.Contains(kvp.Key))
                 {
                     Code += $"\nif(Reader[\"{kvp.Key}\"] == DBNull.Value)";
-                    Code += $"\n{kvp.Key} = null;";
+                    Code += $"\nDTO.{kvp.Key} = null;";
                     Code += $"\nelse";
                 }
-                Code += $"\n{kvp.Key} = ({kvp.Value.DataType})Reader[\"{kvp.Key}\"];";
+                Code += $"\nDTO.{kvp.Key} = ({kvp.Value.DataType})Reader[\"{kvp.Key}\"];";
             }
 
                                 Code+=$@"
@@ -84,7 +83,7 @@ END";
             {{
                 OnErrorOccur?.Invoke(ex);
             }}
-            return IsFound;
+            return DTO;
         }}";
             return Code;
 

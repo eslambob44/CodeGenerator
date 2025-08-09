@@ -12,7 +12,7 @@ namespace Business_Layer
         {
             string Code = $@"private bool _Update()
 {{
-    return cls{ObjectName}Data.Update({string.Join("," , Table.Columns.Keys)});
+    return cls{ObjectName}Data.Update(DTO);
 }}";
             return Code;
         }

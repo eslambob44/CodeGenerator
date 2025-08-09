@@ -136,9 +136,14 @@ namespace Presentation_Layer
 
 
             string FolderLocation = clsRegistry.ReadFromRegistry("FolderLocation");
-            if(FolderLocation == null)
+            if(FolderLocation == null || !Directory.Exists(FolderLocation))
             {
                 FolderLocation = ConfigurationManager.AppSettings["FolderLocation"];
+                if(!Directory.Exists(FolderLocation))
+                {
+                    Directory.CreateDirectory("C:\\CodeGenerator");
+                    FolderLocation = "C:\\CodeGenerator";
+                }
             }
 
              FolderLocation = Table.GenerateCode(codeGenerator, myTextBox1.Text , FolderLocation);

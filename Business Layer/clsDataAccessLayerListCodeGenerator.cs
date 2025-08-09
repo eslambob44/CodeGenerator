@@ -21,11 +21,11 @@ END";
 
 
         enum enListMode { Syncronons , Asyncronons}
-         private string GenerateDataAccessLayerListCode(ITableInfo Table , enListMode ListMode)
+         private string GenerateDataAccessLayerListCode(ITableInfo Table, string ObjectName, enListMode ListMode)
         {
-            string Code = $@"{((ListMode == enListMode.Asyncronons) ? "async " : "")}static public {((ListMode == enListMode.Asyncronons)?"Task<":"")}DataTable{((ListMode == enListMode.Asyncronons) ? ">" : "")} List{((ListMode == enListMode.Asyncronons) ? "Async" : "")}()
+            string Code = $@"{((ListMode == enListMode.Asyncronons) ? "async " : "")}static public {((ListMode == enListMode.Asyncronons) ? "Task<" : "")}List<{ObjectName}DTO>{((ListMode == enListMode.Asyncronons) ? ">" : "")} List{((ListMode == enListMode.Asyncronons) ? "Async" : "")}()
         {{
-            DataTable dt = new DataTable();
+            List<{ObjectName}DTO> liDTO = new List<{ObjectName}DTO>();
             try
             {{
                 using (SqlConnection Connection = new SqlConnection(clsDataAccessSettings.ConnectionString))
@@ -36,9 +36,22 @@ END";
                         Connection.Open();
                         using (SqlDataReader Reader = {((ListMode == enListMode.Asyncronons) ? "await " : "")}Command.ExecuteReader{((ListMode == enListMode.Asyncronons) ? "Async" : "")}())
                         {{
-                            if (Reader.HasRows)
+                            while(Reader.Read())
                             {{
-                                dt.Load(Reader);
+                                {ObjectName}DTO DTO = new {ObjectName}DTO();
+                                ";
+            foreach (var kvp in Table.Columns)
+            {
+                if (Table.NullableColumns.Contains(kvp.Key))
+                {
+                    Code += $"\nif(Reader[\"{kvp.Key}\"] == DBNull.Value)";
+                    Code += $"\nDTO.{kvp.Key} = null;";
+                    Code += $"\nelse";
+                }
+                Code += $"\nDTO.{kvp.Key} = ({kvp.Value.DataType})Reader[\"{kvp.Key}\"];";
+            }
+
+            Code +=$@"      liDTO.Add(DTO);
                             }}
                         }}
                     }}
@@ -48,7 +61,7 @@ END";
             {{
                 OnErrorOccur?.Invoke(ex);
             }}
-            return dt;
+            return liDTO;
         }}";
             return Code;
         }
@@ -57,8 +70,8 @@ END";
         {
             if (GenerateStoredProcedure(tableInfo))
             {
-                string Code = GenerateDataAccessLayerListCode(tableInfo, enListMode.Syncronons);
-                Code += "\n" + GenerateDataAccessLayerListCode(tableInfo, enListMode.Asyncronons);
+                string Code = GenerateDataAccessLayerListCode(tableInfo,ObjectName, enListMode.Syncronons);
+                Code += "\n" + GenerateDataAccessLayerListCode(tableInfo,ObjectName, enListMode.Asyncronons);
                 return Code;
             }
             return null;

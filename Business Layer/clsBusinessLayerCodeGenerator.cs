@@ -20,19 +20,14 @@ namespace Business_Layer
         {
             StringBuilder Code = new StringBuilder();
             Code.AppendLine($@" public class cls{ObjectName}
-{{
-    enum enMode{{ AddNew , Update}};
-    private enMode _Mode;
-");
-            foreach(var kvp in TableInfo.Columns.Where(kvp => TableInfo.PrimaryKeys.Contains(kvp.Key)))
-            {
-                Code.AppendLine($"public {kvp.Value.DataType} {kvp.Key} {{get;{((TableInfo.IsPrimaryKeyIdentity)?"private":"")} set;}}");
-            }
-            foreach(var kvp in TableInfo.Columns.Where(kvp => !TableInfo.PrimaryKeys.Contains(kvp.Key)))
-            {
-                Code.AppendLine($"public {kvp.Value.DataType} {kvp.Key} {{get;  set;}}");
-            }
+            {{");
+            IBusinessLayerCodeGenerator PropertiesCodeGenerator = new clsBusinessLayerPropertiesCodeGenerator();
+            Code.AppendLine(PropertiesCodeGenerator.GenerateCode(TableInfo, ObjectName));
 
+            IBusinessLayerCodeGenerator DTOCodeGenerator = new clsBusinessLayerDTOCodeGenerator();
+            Code.AppendLine(DTOCodeGenerator.GenerateCode(TableInfo, ObjectName));
+
+            
             foreach (var codeGenerator in CodeGenerators)
             {
                 Code.AppendLine(codeGenerator.GenerateCode(TableInfo, ObjectName));
