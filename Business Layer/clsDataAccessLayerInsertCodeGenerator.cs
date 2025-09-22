@@ -52,7 +52,7 @@ namespace Business_Layer
 
 As
 BEGIN
-	Insert Into [{Table.TableName}]({string.Join(",", Columns)})
+	Insert Into [{Table.TableName}]({string.Join(",", Columns.Select(s=>$"[{s}]"))})
 	Values ({string.Join(",", Columns.Select(s => $"@{s}"))});
 
 	{((Table.IsPrimaryKeyIdentity) ? "SELECT SCOPE_IDENTITY()":"")}

@@ -147,7 +147,7 @@ namespace Business_Layer
                 if (type.SqlDataType == "nvarchar" || type.SqlDataType == "varchar")
                     type.SqlDataType += "(max)";
                 if (type.SqlDataType == "char" || type.SqlDataType == "nchar")
-                    type.SqlDataType += "(255)";
+                    type.SqlDataType = "nvarchar(max)";
                 type.DataType = MapSqlDataTypeToCDataType(type.SqlDataType, IsNullable);
                 if (IsNullable)
                     NullableColumns.Add(row["COLUMN_NAME"].ToString());

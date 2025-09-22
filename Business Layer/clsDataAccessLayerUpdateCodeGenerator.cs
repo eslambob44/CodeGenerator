@@ -43,7 +43,7 @@ END ";
 
          private string GenerateDataAccessLayerUpdate(ITableInfo Table , string CParameters , string ObjectName)
         {
-            string Code = $@"static public bool Update({CParameters})
+            string Code = $@"static public bool Update({ObjectName}DTO DTO)
         {{
             bool IsUpdated = false;
             try
